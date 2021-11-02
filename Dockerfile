@@ -9,7 +9,6 @@ ENV STAGES=5s:1,1m:3,10s:0 \
 COPY ./scripts /scripts
 
 WORKDIR /scripts
-
 # Override the entry point of the base k6 image
 ENTRYPOINT []
 
