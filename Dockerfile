@@ -13,4 +13,4 @@ WORKDIR /scripts
 # Override the entry point of the base k6 image
 ENTRYPOINT []
 
-CMD ["sh", "-c", "k6 run --vus $VUS --duration $DURATION --out influxdb=http://104.40.213.24:8086/Volvo -e ENV=$ENVNAME -e PROJECTNAME=$PROJECTNAME -e APINAME=$APINAME $SCRIPT "]
+CMD ["sh", "-c", "k6 run --stage $STAGES --out influxdb=http://104.40.213.24:8086/Volvo -e ENV=$ENVNAME -e PROJECT=$PROJECT -e APINAME=$APINAME $SCRIPT "]
