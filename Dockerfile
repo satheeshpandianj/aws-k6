@@ -1,9 +1,8 @@
-FROM loadimpact/k6:0.26.1
+FROM loadimpact/k6:latest
 
-ENV VUS=2 \
-    SCRIPT=test.js \
-    DURATION=5m \
-    PROJECTNAME=Commerce \
+ENV STAGES=5s:1,1m:3,10s:0 \
+    SCRIPT=getListMarkets.js \
+    PROJECT=Commerce \
     APINAME=ListMarkets \
     ENVNAME=QA
 
@@ -13,6 +12,5 @@ WORKDIR /scripts
 
 # Override the entry point of the base k6 image
 ENTRYPOINT []
-# CMD ["sh", "-c", "k6 run $SCRIPT --vus $VUS --out influxdb=http://104.40.213.24:8086/Volvo -e PROJECT=$PROJECT -e APINAME=$APINAME -e ENV=$ENVNAME"]
 
 CMD ["sh", "-c", "k6 run --vus $VUS --duration $DURATION --out influxdb=http://104.40.213.24:8086/Volvo -e ENV=$ENVNAME -e PROJECTNAME=$PROJECTNAME -e APINAME=$APINAME $SCRIPT "]
