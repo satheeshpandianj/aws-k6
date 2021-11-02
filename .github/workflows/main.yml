@@ -50,12 +50,6 @@ jobs:
           task-definition: task-definition.json
           container-name: k6testcontainer
           image: ${{ steps.build-image.outputs.image }}
-          environment-variables: | 
-            SCRIPT=getListMarkets.js
-            APINAME=ListMarkets
-            ENVNAME=QA
-            PROJECT=Commerce
-            STAGES=5s:1,1m:3,10s:0
 
       - name: Deploy Amazon ECS task definition
         uses: aws-actions/amazon-ecs-deploy-task-definition@v1
