@@ -29,7 +29,7 @@ jobs:
         id: build-image
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          ECR_REPOSITORY: k6test
+          ECR_REPOSITORY: k6run
           IMAGE_TAG: ${{ github.sha }}
         run: |
           # Build a docker container and
@@ -41,18 +41,26 @@ jobs:
 
       - name: Download task definition
         run: |
-          aws ecs describe-task-definition --task-definition k6testtaskdefinition:4 --query taskDefinition > task-definition.json
+          aws ecs describe-task-definition --task-definition k6runtask:1 --query taskDefinition > task-definition.json
 
       - name: Fill in the new image ID in the Amazon ECS task definition
         id: task-def
         uses: aws-actions/amazon-ecs-render-task-definition@v1
         with:
           task-definition: task-definition.json
-          container-name: k6testcontainer
+          container-name: k6runcontainer
           image: ${{ steps.build-image.outputs.image }}
+          environment-variables: | 
+            SCRIPT=getListMarkets.js
+            APINAME=ListMarkets
+            ENVNAME=QA
+            PROJECT=Commerce
+            STAGES=5s:1,1m:3,10s:0
 
       - name: Deploy Amazon ECS task definition
         uses: aws-actions/amazon-ecs-deploy-task-definition@v1
         with:
           task-definition: ${{ steps.task-def.outputs.task-definition }}
-          cluster: k6testcluster
+          cluster: k6runcluster
+          service: k6runservice
+          wait-for-service-stability: true
